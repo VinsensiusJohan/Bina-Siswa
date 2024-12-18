@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+</head>
+<body>
+    <h2>Daftar</h2>
+    <label for="role">Sebagai :</label>
+    <select id="choose_role" onchange="change_option()">
+        <option value="siswa">Siswa</option>
+        <option value="guru">Guru</option>
+    </select>
+
+    <div id="daftar_siswa" class="content">
+        <h3>Siswa</h3>
+    </div>
+
+    <div id="daftar_guru" class="content">
+        <h3>Guru</h3>
+    </div>
+
+    <script>
+        function change_option(){
+            var selected = document.getElementById("choose_role").value;
+            var content = document.querySelectorAll(".content");
+            
+            content.forEach(function(content){
+                content.style.display = "none";
+            });
+
+            if(selected === "siswa"){
+                document.getElementById("daftar_siswa").style.display = "block";
+            }
+            else if(selected === "guru"){
+                document.getElementById("daftar_guru").style.display = "block";
+            }
+        }
+
+        window.onload = function(){
+            document.getElementById("choose_role").value = "siswa";
+            change_option();
+        }
+    </script>
+</body>
+</html>
