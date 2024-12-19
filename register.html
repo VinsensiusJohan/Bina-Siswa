@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="app.js" type="module" defer></script>
 </head>
 <body>
     <h2>Daftar</h2>
-    <label for="role">Sebagai :</label>
+    <label>Sebagai :</label>
     <select id="choose_role" onchange="change_option()">
         <option value="siswa">Siswa</option>
         <option value="guru">Guru</option>
@@ -15,11 +17,78 @@
 
     <div id="daftar_siswa" class="content">
         <h3>Siswa</h3>
+        <table>
+            <tr>
+                <td><label>Username</label></td>
+                <td><input type="text" id="reg_username"></td>
+            </tr>
+            <tr>
+                <td><label>Password</label></td>
+                <td><input type="text" id="reg_password"></td>
+            </tr>
+            <tr>
+                <td><label>Email</label></td>
+                <td><input type="text" id="reg_email"></td>
+            </tr>
+            <tr>
+                <td><label>Sekolah</label></td>
+                <td><input type="text" id="reg_sekolah"></td>
+            </tr>
+            <tr>
+                <td><label>Gender</label></td>
+                <td>
+                    <select id="reg_gender">
+                        <option value="" disabled selected>Gender</option>
+                        <option value="L">Laki-Laki</option>
+                        <option value="P">Perempuan</option>
+                    </select>
+                </td>
+            </tr>
+        </table>
     </div>
 
     <div id="daftar_guru" class="content">
         <h3>Guru</h3>
+        <table>
+            <tr>
+                <td><label>Username</label></td>
+                <td><input type="text" id="reg_username_guru"></td>
+            </tr>
+            <tr>
+                <td><label>Password</label></td>
+                <td><input type="text" id="reg_password_guru"></td>
+            </tr>
+            <tr>
+                <td><label>Email Pribadi</label></td>
+                <td><input type="text" id="reg_email_guru"></td>
+            </tr>
+            <tr>
+                <td><label>Email Institusi</label></td>
+                <td><input type="text" id="reg_email_ins"></td>
+            </tr>
+            <tr>
+                <td><label>Bidang Studi</label></td>
+                <td><input type="text" id="reg_studi"></td>
+            </tr>
+            <tr>
+                <td><label>Pengalaman Mengajar</label></td>
+                <td><input type="text" id="reg_experience"></td>
+            </tr>
+            <tr>
+                <td><label>Gender</label></td>
+                <td>
+                    <select id="reg_gender_guru">
+                        <option value="" disabled selected>Gender</option>
+                        <option value="L">Laki-Laki</option>
+                        <option value="P">Perempuan</option>
+                    </select>
+                </td>
+            </tr>
+        </table>
     </div>
+    <br>
+    <button id="register">Daftar</button><br><br>
+    <button id="back">Kembali</button>
 
     <script>
         function change_option(){
