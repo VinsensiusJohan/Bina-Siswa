@@ -16,12 +16,14 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const db = getDatabase();
+const dbRef = ref(db);
 
 // Get ID Element
 let username = document.getElementById("username");
 let password = document.getElementById("password");
 let role = document.getElementById("role");
 let reg_role = document.getElementById("choose_role");
+let menu_bayar = document.getElementById("menu_premium");
 
 //Siswa
 let reg_username = document.getElementById("reg_username");
@@ -45,19 +47,25 @@ let register_btn = document.getElementById("register");
 let register_btn_page = document.getElementById("register_page");
 let logout_btn = document.getElementById("logout");
 let back_btn = document.getElementById("back");
+let bayar_button = document.getElementById("bayar");
+let backtosiswa_btn = document.getElementById("backtosiswa");
+let premium_btn = document.getElementById("premium");
 
 // Check if needed
-if(register_btn){register_btn.addEventListener('click',Add_User);}
-if(login_btn){login_btn.addEventListener('click',Check_Login);}
-if(logout_btn){logout_btn.addEventListener('click',Logout);}
-if(register_btn_page){register_btn_page.addEventListener('click',toRegisterPage);}
-if(back_btn){back_btn.addEventListener('click',toIndexPage);}
+if (register_btn) { register_btn.addEventListener('click', Add_User); }
+if (login_btn) { login_btn.addEventListener('click', Check_Login); }
+if (logout_btn) { logout_btn.addEventListener('click', Logout); }
+if (register_btn_page) { register_btn_page.addEventListener('click', toRegisterPage); }
+if (back_btn) { back_btn.addEventListener('click', toIndexPage); }
+if (bayar_button) { bayar_button.addEventListener('click', bayarPremium); }
+if (backtosiswa_btn){backtosiswa_btn.addEventListener('click', toSiswaPage);}
+if (premium_btn){premium_btn.addEventListener('click', toPremium);}
 
 
 //Defined function
 
 //Logout
-function Logout(){
+function Logout() {
     sessionStorage.clear();
     window.location.href = "index.html";
 }
@@ -72,21 +80,32 @@ function showAlert(type, title, text) {
 }
 
 //Register page
-function toRegisterPage(){
+function toRegisterPage() {
     window.location.href = "register.html";
 }
 
-function toIndexPage(){
+//Index page
+function toIndexPage() {
     window.location.href = "index.html";
+}
+
+//Siswa page
+function toSiswaPage(){
+    window.location.href = "siswa.html";
+}
+
+//Premium page
+function toPremium(){
+    window.location.href = "premium.html";
 }
 
 //Register
 function Add_User() {
-    if(reg_role.value === "siswa"){
+    if (reg_role.value === "siswa") {
         if (!reg_username.value || !reg_password.value || !reg_email.value || !reg_sekolah.value || reg_gender.value === "") {
             showAlert('error', 'Error', 'Semua harus diisi!');
-            return; 
-        }else{
+            return;
+        } else {
             set(ref(db, 'Siswa/' + reg_username.value), {
                 password: reg_password.value,
                 email: reg_email.value,
@@ -99,28 +118,29 @@ function Add_User() {
                 showAlert('error', 'Oops...', 'Terjadi kesalahan saat membuat akun: ' + error);
             });
         }
-        
-    }else if(reg_role.value === "guru"){
+
+    } else if (reg_role.value === "guru") {
         if (!reg_username_guru.value || !reg_password_guru.value || !reg_email_guru.value || !reg_ins_email.value || !reg_studi.value || !reg_experience.value || reg_gender_guru.value === "") {
             showAlert('error', 'Error', 'Semua harus diisi!');
             return;
         }
-        else{
+        else {
             set(ref(db, 'Guru/' + reg_username_guru.value), {
-            password: reg_password_guru.value,
-            email_pribadi: reg_email_guru.value,
-            email_institusi: reg_ins_email.value,
-            studi: reg_studi.value,
-            exp: reg_experience.value,
-            gender: reg_gender_guru.value
-        }).then(() => {
-            showAlert('success', 'Berhasil!', 'Akun berhasil dibuat!');
-        }).catch((error) => {
-            console.log(error);
-            showAlert('error', 'Oops...', 'Terjadi kesalahan saat membuat akun: ' + error);
-        });}
-        
-    }else{
+                password: reg_password_guru.value,
+                email_pribadi: reg_email_guru.value,
+                email_institusi: reg_ins_email.value,
+                studi: reg_studi.value,
+                exp: reg_experience.value,
+                gender: reg_gender_guru.value
+            }).then(() => {
+                showAlert('success', 'Berhasil!', 'Akun berhasil dibuat!');
+            }).catch((error) => {
+                console.log(error);
+                showAlert('error', 'Oops...', 'Terjadi kesalahan saat membuat akun: ' + error);
+            });
+        }
+
+    } else {
         showAlert('error', 'Oops...', 'Ada sedikit masalah !');
     }
 }
@@ -132,7 +152,7 @@ function Check_Login() {
     if (!username.value || !password.value || role.value === "") {
         showAlert('error', 'Error', 'Semua harus diisi!');
         return;
-    }else if(role.value === "siswa"){
+    } else if (role.value === "siswa") {
         get(child(dbRef, 'Siswa/' + username.value)).then((snapshot) => {
             if (snapshot.exists()) {
                 let password_db = snapshot.val().password;
@@ -151,7 +171,9 @@ function Check_Login() {
             showAlert('error', 'Error', 'Gagal terhubung ke database: ' + error.message);
             console.error("Database error:", error);
         });
-    }else if(role.value === "guru"){
+    }
+
+    else if (role.value === "guru") {
         get(child(dbRef, 'Guru/' + username.value)).then((snapshot) => {
             if (snapshot.exists()) {
                 let password_db = snapshot.val().password;
@@ -170,9 +192,46 @@ function Check_Login() {
             showAlert('error', 'Error', 'Gagal terhubung ke database: ' + error.message);
             console.error("Database error:", error);
         });
-    }else{
+    } else {
         showAlert('error', 'Error', 'Ada yang salah nih !');
     }
+}
 
-    
+//Premium
+function bayarPremium() {
+    let username = sessionStorage.getItem("username");
+    let menu = menu_bayar.value;
+
+    get(child(dbRef, 'Premium')).then((snapshot) =>{
+        let check_premium = false;
+        if(snapshot.exists()){
+            let premium_data = snapshot.val();
+
+            for(let duration in premium_data){
+                if(premium_data[duration][username]){
+                    check_premium = true;
+                    break;
+                }
+            }
+        }
+        if(check_premium){
+            showAlert('error', 'Error', 'Anda sudah berlangganan !');
+            return;
+        }
+        else if (menu === "") { showAlert('error', 'Error', 'Silahkan isi terlebih dahulu !'); }
+        else{
+            const path = `Premium/${menu}/${username}`;
+            update(dbRef, {
+                [path]: true
+            }).then(() => {
+                showAlert('success', 'Berhasil!', 'Berhasil Berlangganan !');
+            }).catch((error) => {
+                showAlert('error', 'Error', 'Ada yang salah nih !' + error.message);
+            });
+        }
+    });
+
+
+
+
 }
